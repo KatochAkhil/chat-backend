@@ -97,11 +97,11 @@ Upgrading to premium features is simulated using test keys:
 
 ---
 
-### 7. Redis Caching Layer
-To optimize performance and database lookups, a Redis caching layer has been integrated:
-* **High-Performance Caching**: Employs key-value caching using the official Redis client. If the local system doesn't have Redis running, it automatically falls back to a mock in-memory store, preventing server crashes.
-* **AI Content Cache-Aside**: Hashes the conversation context using MD5 to form unique cache keys. If the generated AI summary and suggested replies for that exact context are found in Redis, they are returned instantly. Otherwise, the Gemini service is called and the results are cached with a 5-minute Time-To-Live (TTL).
-* **Presence Caching**: Active users online in the room are serialized and cached under `presence:<roomId>` with a 1-hour TTL, laying the foundation for scaling websocket states horizontally.
+### 7. In-Memory Caching Layer
+To optimize performance and database lookups, an in-memory caching layer has been integrated:
+* **High-Performance Caching**: Employs key-value caching using an In-Memory Map.
+* **AI Content Cache-Aside**: Hashes the conversation context using MD5 to form unique cache keys. If the generated AI summary and suggested replies for that exact context are found in the cache, they are returned instantly. Otherwise, the Gemini service is called and the results are cached with a 5-minute Time-To-Live (TTL).
+* **Presence Caching**: Active users online in the room are serialized and cached under `presence:<roomId>` with a 1-hour TTL, laying the foundation for scaling websocket states.
 
 ---
 

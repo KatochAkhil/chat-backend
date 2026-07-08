@@ -2,7 +2,7 @@ import { Server, Socket } from "socket.io";
 import { ChatService } from "../services/chat.service";
 import { TokenService } from "../utils/token";
 import { UserRepository } from "../repositories/user.repository";
-import { getRedisClient } from "../config/redis";
+import { getCacheClient } from "../config/cache";
 
 interface OutboundMessagePayload {
   roomId: string;
@@ -152,10 +152,10 @@ export class SocketGateway {
   private async emitPresence(roomId: string) {
     const users = Array.from(this.roomUsers.get(roomId)?.values() ?? []);
     
-    // Cache active user presence list in Redis (TTL: 1 hour)
+    // Cache active user presence list in memory (TTL: 1 hour)
     try {
-      const redis = getRedisClient();
-      await redis.set(`presence:${roomId}`, JSON.stringify(users), { EX: 3600 });
+      const cache = getCacheClient();
+      await cache.set(`presence:${roomId}`, JSON.stringify(users), { EX: 3600 });
     } catch (err) {
       console.warn("Failed to cache room presence list:", err);
     }

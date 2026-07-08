@@ -5,7 +5,6 @@ const envSchema = z.object({
   BACKEND_PORT: z.coerce.number().default(4000),
   BACKEND_CLIENT_URL: z.string().default("http://localhost:3000,http://localhost:3001"),
   SWAGGER_SERVER_URL: z.string().default("http://localhost:4000"),
-  REDIS_URL: z.string().default("redis://127.0.0.1:6379"),
   AI_RATE_LIMIT_WINDOW_SECONDS: z.coerce.number().int().positive().default(15),
   AI_RATE_LIMIT_MAX_REQUESTS: z.coerce.number().int().positive().default(2),
   MONGODB_URI: z.string(),

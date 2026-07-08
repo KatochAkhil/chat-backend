@@ -2,7 +2,7 @@ import { Response } from "express";
 import crypto from "crypto";
 import type { AuthenticatedRequest } from "../types";
 import { GeminiService } from "../services/gemini.service";
-import { getRedisClient } from "../config/redis";
+import { getCacheClient } from "../config/cache";
 
 export class AiController {
   constructor(private readonly geminiService: GeminiService) {}
@@ -12,10 +12,10 @@ export class AiController {
 
     const hash = crypto.createHash("md5").update(context || "").digest("hex");
     const cacheKey = `ai:sidebar:${hash}`;
-    const redis = getRedisClient();
+    const cache = getCacheClient();
 
     try {
-      const cached = await redis.get(cacheKey);
+      const cached = await cache.get(cacheKey);
       if (cached) {
         return response.json(JSON.parse(cached));
       }
@@ -31,7 +31,7 @@ export class AiController {
     const result = { replies, summary };
 
     try {
-      await redis.set(cacheKey, JSON.stringify(result), { EX: 300 }); // Cache for 5 minutes
+      await cache.set(cacheKey, JSON.stringify(result), { EX: 300 }); // Cache for 5 minutes
     } catch (err) {
       console.warn("Failed to set AI sidebar cache:", err);
     }
