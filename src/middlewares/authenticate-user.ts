@@ -5,7 +5,7 @@ import { TokenService } from "../utils/token";
 const tokenService = new TokenService();
 
 export function authenticateUser(request: AuthenticatedRequest, response: Response, next: NextFunction) {
-  const token = request.cookies.nexus_access_token;
+  const token = request.cookies._access_token;
   if (!token) {
     return response.status(401).json({ message: "Unauthorized" });
   }
@@ -15,7 +15,7 @@ export function authenticateUser(request: AuthenticatedRequest, response: Respon
 }
 
 export function optionalAuth(request: AuthenticatedRequest, _response: Response, next: NextFunction) {
-  const token = request.cookies.nexus_access_token;
+  const token = request.cookies._access_token;
   if (token) {
     request.user = tokenService.verify(token);
   }

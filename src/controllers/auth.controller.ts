@@ -1,10 +1,10 @@
-import { Response } from "express";
+import { NextFunction, Response } from "express";
 import type { AuthenticatedRequest } from "../types";
 import { AuthService } from "../services/auth.service";
 import { clientOrigins } from "../config/env";
 
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   private getCookieOptions() {
     const isProduction = process.env.NODE_ENV === "production";
@@ -19,16 +19,24 @@ export class AuthController {
     };
   }
 
-  loginWithGoogle = async (request: AuthenticatedRequest, response: Response) => {
-    const { credential, accessToken } = request.body as { credential?: string; accessToken?: string };
-    const result = await this.authService.loginWithGoogle({ credential, accessToken });
+  loginWithGoogle = async (request: AuthenticatedRequest, response: Response, next: NextFunction) => {
+    try {
+      const { credential, accessToken } = request.body as { credential?: string; accessToken?: string };
+      const result = await this.authService.loginWithGoogle({ credential, accessToken });
 
-    response
-      .cookie("nexus_access_token", result.token, this.getCookieOptions())
-      .json({ user: result.user });
+      response
+        .cookie("_access_token", result.token, this.getCookieOptions())
+        .json({ user: result.user, token: result.token });
+    } catch (error) {
+      next(error);
+    }
   };
 
-  logout = async (_request: AuthenticatedRequest, response: Response) => {
-    response.clearCookie("nexus_access_token", this.getCookieOptions()).json({ success: true });
+  logout = async (_request: AuthenticatedRequest, response: Response, next: NextFunction) => {
+    try {
+      response.clearCookie("_access_token", this.getCookieOptions()).json({ success: true });
+    } catch (error) {
+      next(error);
+    }
   };
 }

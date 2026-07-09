@@ -70,7 +70,7 @@ export function createApp() {
           cookieAuth: {
             type: "apiKey",
             in: "cookie",
-            name: "nexus_access_token"
+            name: "_access_token"
           }
         }
       }

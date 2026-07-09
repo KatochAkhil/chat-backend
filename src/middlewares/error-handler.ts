@@ -20,6 +20,7 @@ function getErrorMessage(error: unknown) {
 }
 
 export function errorHandler(error: unknown, _request: Request, response: Response, _next: NextFunction) {
+  console.error("Express Error Handler:", error);
   response.status(500).json({
     message: getErrorMessage(error)
   });

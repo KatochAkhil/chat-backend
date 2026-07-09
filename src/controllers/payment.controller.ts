@@ -62,8 +62,8 @@ export class PaymentController {
 
       this.socketGateway.emitPremiumActivated(userId, user);
       return response
-        .cookie("nexus_access_token", refreshedToken, this.getCookieOptions())
-        .json({ user });
+        .cookie("_access_token", refreshedToken, this.getCookieOptions())
+        .json({ user, token: refreshedToken });
     } catch (error) {
       return next(error);
     }

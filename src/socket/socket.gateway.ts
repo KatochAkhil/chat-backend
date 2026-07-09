@@ -26,13 +26,13 @@ export class SocketGateway {
     private readonly io: Server,
     private readonly chatService: ChatService,
     private readonly userRepository: UserRepository
-  ) {}
+  ) { }
 
   register() {
     this.io.use((socket, next) => {
       const token = socket.handshake.headers.cookie
         ?.split(";")
-        .find((value) => value.trim().startsWith("nexus_access_token="))
+        .find((value) => value.trim().startsWith("_access_token="))
         ?.split("=")[1];
 
       if (!token) {
@@ -151,7 +151,7 @@ export class SocketGateway {
 
   private async emitPresence(roomId: string) {
     const users = Array.from(this.roomUsers.get(roomId)?.values() ?? []);
-    
+
     // Cache active user presence list in memory (TTL: 1 hour)
     try {
       const cache = getCacheClient();

@@ -1,6 +1,6 @@
-# Nexus AI Chat Backend (TypeScript Express)
+#   AI Chat Backend (TypeScript Express)
 
-This folder contains the Express API and Socket.IO real-time server for **Nexus AI Chat**. It handles Google token authentications, Socket.IO channels, MongoDB transactions, Gemini AI prompt completions, and Razorpay signature verification.
+This folder contains the Express API and Socket.IO real-time server for **  AI Chat**. It handles Google token authentications, Socket.IO channels, MongoDB transactions, Gemini AI prompt completions, and Razorpay signature verification.
 
 ---
 
@@ -24,10 +24,10 @@ Create a `.env` file inside this directory:
 PORT=4000
 
 # MongoDB Connection String
-MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/nexus-chat?retryWrites=true&w=majority
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/ -chat?retryWrites=true&w=majority
 
 # JWT Token Secret
-JWT_SECRET=supersecret_nexus_jwt_token_secret_key
+JWT_SECRET=supersecret_ _jwt_token_secret_key
 
 # Google OAuth Configuration
 GOOGLE_CLIENT_ID=your-google-client-id-here
