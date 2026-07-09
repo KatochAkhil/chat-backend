@@ -30,10 +30,14 @@ export class SocketGateway {
 
   register() {
     this.io.use((socket, next) => {
-      const token = socket.handshake.headers.cookie
-        ?.split(";")
-        .find((value) => value.trim().startsWith("_access_token="))
-        ?.split("=")[1];
+      let token = socket.handshake.auth?.token;
+
+      if (!token) {
+        token = socket.handshake.headers.cookie
+          ?.split(";")
+          .find((value) => value.trim().startsWith("_access_token="))
+          ?.split("=")[1];
+      }
 
       if (!token) {
         return next(new Error("Unauthorized"));
