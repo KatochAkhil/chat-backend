@@ -5,19 +5,43 @@ import { TokenService } from "../utils/token";
 const tokenService = new TokenService();
 
 export function authenticateUser(request: AuthenticatedRequest, response: Response, next: NextFunction) {
-  const token = request.cookies._access_token;
+  let token = request.cookies._access_token;
+
+  if (!token) {
+    const authHeader = request.headers.authorization;
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      token = authHeader.split(" ")[1];
+    }
+  }
+
   if (!token) {
     return response.status(401).json({ message: "Unauthorized" });
   }
 
-  request.user = tokenService.verify(token);
-  return next();
+  try {
+    request.user = tokenService.verify(token);
+    return next();
+  } catch (error) {
+    return response.status(401).json({ message: "Unauthorized" });
+  }
 }
 
 export function optionalAuth(request: AuthenticatedRequest, _response: Response, next: NextFunction) {
-  const token = request.cookies._access_token;
+  let token = request.cookies._access_token;
+
+  if (!token) {
+    const authHeader = request.headers.authorization;
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      token = authHeader.split(" ")[1];
+    }
+  }
+
   if (token) {
-    request.user = tokenService.verify(token);
+    try {
+      request.user = tokenService.verify(token);
+    } catch {
+      // Ignore verification errors for optional auth
+    }
   }
   next();
 }
